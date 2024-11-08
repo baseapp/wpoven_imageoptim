@@ -77,6 +77,8 @@ jobs:
       - name: Install WordPress Core
         run: |
           cd $WP_PATH
+          mkdir -p $WP_PATH/wp-content/uploads
+          chmod -R 755 $WP_PATH/wp-content/uploads
           wp core install \
             --url="$WORDPRESS_URL" \
             --title="Test Site" \
@@ -84,7 +86,6 @@ jobs:
             --admin_password="$ADMIN_PASSWORD" \
             --admin_email="$ADMIN_EMAIL" \
             --skip-email
-          sudo chmod -R 755 $WP_PATH/wp-content/uploads
 
       - name: Setup Plugin
         run: |
