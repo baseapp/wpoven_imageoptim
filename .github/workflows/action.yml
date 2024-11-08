@@ -51,10 +51,17 @@ jobs:
           sudo systemctl start mysql
           mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_test;" -uroot -proot
           
-      - name: Restart Nginx
-        run:
-          name: nginx
-          state: restarted
+      - name
+        uses: nyurik/action-setup-nginx@v1
+        id: nginx
+        run: |
+          echo "Hello, world!" > "${{ steps.nginx.outputs.html-dir }}/index.html"
+          
+          curl http://localhost:${{ steps.nginx.outputs.port }}/
+          # Expected output: Hello, world!
+
+          cat "${{ steps.nginx.outputs.access-log }}"
+          # Expected to contain a line with   GET /   HTTP/1.1   200
 
       - name: Setup WordPress
         run: |
