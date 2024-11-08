@@ -326,7 +326,7 @@ class Wpoven_Image_Optimization_Admin
 				}
 
 				// Return the response as JSON
-				die(json_encode($return_array));
+				die(wp_json_encode($return_array));
 			}
 		}
 	}
@@ -373,28 +373,30 @@ class Wpoven_Image_Optimization_Admin
 			WHERE pm.meta_key = %s
 			AND pm.meta_value = %s
 			AND p.post_type = 'attachment'
-			AND p.post_mime_type LIKE 'image%%'
-		", 'wpoven_optimized_status', '0'));
+			AND p.post_mime_type LIKE %s
+		", 'wpoven_optimized_status', '0', 'image%'));
 
 		// Count the number of rows with wpoven_optimized_status as 1
-		$total_optimized_images =  $wpdb->get_var($wpdb->prepare("
+		// Query for total optimized images
+		$total_optimized_images = $wpdb->get_var($wpdb->prepare("
 			SELECT COUNT(*)
 			FROM $wpdb->postmeta pm
 			INNER JOIN $wpdb->posts p ON pm.post_id = p.ID
 			WHERE pm.meta_key = %s
 			AND pm.meta_value = %s
 			AND p.post_type = 'attachment'
-			AND p.post_mime_type LIKE 'image%%'
-		", 'wpoven_optimized_status', '1'));
+			AND p.post_mime_type LIKE %s
+		", 'wpoven_optimized_status', '1', 'image%'));
 
+		// Query for other values (attachments without wpoven_optimized_status meta key)
 		$other_values = $wpdb->get_var($wpdb->prepare("
 			SELECT COUNT(*)
 			FROM $wpdb->posts p
 			LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id AND pm.meta_key = %s
 			WHERE pm.post_id IS NULL
 			AND p.post_type = 'attachment'
-			AND p.post_mime_type LIKE 'image%%'
-		", 'wpoven_optimized_status'));
+			AND p.post_mime_type LIKE %s
+		", 'wpoven_optimized_status', 'image%'));
 
 		$total_unoptimized_images = $count_zero + $other_values;
 
@@ -412,7 +414,7 @@ class Wpoven_Image_Optimization_Admin
 		}
 		$return_array['success_msg'] = __($message, 'WPOven image optimization');
 
-		die(json_encode($return_array));
+		die(wp_json_encode($return_array));
 	}
 
 	/**
@@ -446,7 +448,7 @@ class Wpoven_Image_Optimization_Admin
 
 		$return_array['status'] = 'ok';
 
-		die(json_encode($return_array));
+		die(wp_json_encode($return_array));
 	}
 
 	/**
@@ -477,9 +479,10 @@ class Wpoven_Image_Optimization_Admin
 					WHERE pm.meta_key = %s
 					AND pm.meta_value = %s
 					AND p.post_type = 'attachment'
-					AND p.post_mime_type LIKE 'image%%'
-				", 'wpoven_optimized_status', '0')
+					AND p.post_mime_type LIKE %s
+				", 'wpoven_optimized_status', '0', 'image%')
 			);
+
 
 			if (!empty($results)) {
 
@@ -511,7 +514,7 @@ class Wpoven_Image_Optimization_Admin
 		$return_array['status'] = 'ok';
 		$return_array['success_msg'] = __('success', 'WPOven image optimization');
 
-		die(json_encode($return_array));
+		die(wp_json_encode($return_array));
 	}
 
 	/**
@@ -613,7 +616,7 @@ class Wpoven_Image_Optimization_Admin
 		$return_array['images'] = $data;
 		$return_array['status'] = 'ok';
 
-		die(json_encode($return_array));
+		die(wp_json_encode($return_array));
 	}
 
 	/**
@@ -643,7 +646,7 @@ class Wpoven_Image_Optimization_Admin
 				// Check nonce for security
 				if (!wp_verify_nonce($security, 'wpoven_ajax_nonce')) {
 					$return_array['error_msg'] = __('Security check failed', 'WPOven image optimization');
-					die(json_encode($return_array));
+					die(wp_json_encode($return_array));
 				}
 
 				// Check if the image file is set and there are no errors
@@ -699,7 +702,7 @@ class Wpoven_Image_Optimization_Admin
 			$return_array['status'] = 'ok';
 		}
 
-		die(json_encode($return_array));
+		die(wp_json_encode($return_array));
 	}
 
 
@@ -862,7 +865,7 @@ class Wpoven_Image_Optimization_Admin
 			'error'                => '0'
 		);
 
-		die(json_encode($data));
+		die(wp_json_encode($data));
 	}
 
 	/**
