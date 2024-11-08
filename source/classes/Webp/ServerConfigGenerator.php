@@ -5,7 +5,8 @@ require_once 'Nginx.php';
 require_once 'Apache.php';
 require_once 'IIS.php';
 
-class ServerConfigGenerator {
+class ServerConfigGenerator
+{
 
     private $home_url;
     private $home_root;
@@ -13,7 +14,8 @@ class ServerConfigGenerator {
     private $configFileName;
     private $rewriteRules;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Initialize necessary properties
         $this->home_url = home_url('/');
         $this->home_root = wp_parse_url($this->home_url, PHP_URL_PATH);
@@ -25,7 +27,8 @@ class ServerConfigGenerator {
      * 
      * @return string The detected server type
      */
-    private function detectServerType() {
+    private function detectServerType()
+    {
         if (stripos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false) {
             return 'nginx';
         } elseif (stripos($_SERVER['SERVER_SOFTWARE'], 'apache') !== false) {
@@ -40,7 +43,8 @@ class ServerConfigGenerator {
     /**
      * Generate server-specific rewrite rules
      */
-    public function generateServerConfig() {
+    public function generateServerConfig()
+    {
         // Detect server type
         $server_type = $this->detectServerType();
 
@@ -59,7 +63,7 @@ class ServerConfigGenerator {
                 $this->configFileName = IISConfig::getConfigFileName();
                 break;
             default:
-                wp_die('Unsupported server type. Unable to generate configuration.');
+                return null;
         }
 
         // Save the configuration to a file
@@ -69,7 +73,8 @@ class ServerConfigGenerator {
     /**
      * Save the generated rewrite rules to a configuration file
      */
-    private function saveConfigToFile() {
+    private function saveConfigToFile()
+    {
         $path = wp_upload_dir();
         $dir = $path['basedir'] . '/conf';
 
@@ -88,4 +93,3 @@ class ServerConfigGenerator {
         // echo "Server configuration has been written to " . $configFilePath;
     }
 }
-
