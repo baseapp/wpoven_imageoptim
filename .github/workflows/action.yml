@@ -54,6 +54,8 @@ jobs:
       - name: Enable nginx server
         uses: nyurik/action-setup-nginx@v1
         id: nginx
+      
+      - name: Check nginx server
         run: |
           echo "Hello, world!" > "${{ steps.nginx.outputs.html-dir }}/index.html"
           
