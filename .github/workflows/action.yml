@@ -73,7 +73,6 @@ jobs:
           curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
           chmod +x wp-cli.phar
           sudo mv wp-cli.phar /usr/local/bin/wp
-          sudo chmod -R 755 $WP_PATH/wp-content/uploads
 
       - name: Install WordPress Core
         run: |
@@ -85,6 +84,7 @@ jobs:
             --admin_password="$ADMIN_PASSWORD" \
             --admin_email="$ADMIN_EMAIL" \
             --skip-email
+          sudo chmod -R 755 $WP_PATH/wp-content/uploads
 
       - name: Setup Plugin
         run: |
