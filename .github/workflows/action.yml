@@ -50,10 +50,15 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_test;" -uroot -proot
-      - name: Restart Nginx
-        service:
-          name: nginx
-          state: restarted
+
+      - name: Restart NGINX Server
+        hosts: webservers
+        become: true
+        tasks:
+          - name: Restart NGINX
+            service:
+              name: nginx
+              state: restarted
 
       - name: Setup WordPress
         run: |
