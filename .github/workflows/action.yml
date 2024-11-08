@@ -77,8 +77,8 @@ jobs:
       - name: Install WordPress Core
         run: |
           cd $WP_PATH
-          mkdir -p $WP_PATH/wp-content/uploads
-          chmod -R 755 $WP_PATH/wp-content/uploads
+          sudo mkdir -p $WP_PATH/wp-content/uploads
+          sudo chmod -R 755 $WP_PATH/wp-content/uploads
           wp core install \
             --url="$WORDPRESS_URL" \
             --title="Test Site" \
