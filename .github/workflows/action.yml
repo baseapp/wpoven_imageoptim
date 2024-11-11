@@ -51,19 +51,19 @@ jobs:
           sudo systemctl start mysql
           mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_test;" -uroot -proot
           
-      - name: Enable nginx server
-        uses: nyurik/action-setup-nginx@v1
-        id: nginx
+      # - name: Enable nginx server
+      #   uses: nyurik/action-setup-nginx@v1
+      #   id: nginx
       
-      - name: Check nginx server
-        run: |
-          echo "Hello, world!" > "${{ steps.nginx.outputs.html-dir }}/index.html"
+      # - name: Check nginx server
+      #   run: |
+      #     echo "Hello, world!" > "${{ steps.nginx.outputs.html-dir }}/index.html"
           
-          curl http://localhost:${{ steps.nginx.outputs.port }}/
-          # Expected output: Hello, world!
+      #     curl http://localhost:${{ steps.nginx.outputs.port }}/
+      #     # Expected output: Hello, world!
 
-          cat "${{ steps.nginx.outputs.access-log }}"
-          # Expected to contain a line with   GET /   HTTP/1.1   200
+      #     cat "${{ steps.nginx.outputs.access-log }}"
+      #     # Expected to contain a line with   GET /   HTTP/1.1   200
 
       - name: Setup WordPress
         run: |
@@ -80,7 +80,7 @@ jobs:
           # Set permissions
           sudo chown -R www-data:www-data $WP_PATH
           sudo chmod -R 755 $WP_PATH
-          sudo systemctl start nginx
+          sudo service apache2 start
 
       - name: Install WP-CLI
         run: |
