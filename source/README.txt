@@ -28,7 +28,7 @@ Pie chart: Visualize your image optimization progress with an intuitive pie char
 
 Download the Plugin:
 
-- To get the latest version of WPOven SMTP Suresend, you can either:
+- To get the latest version of WPOven Image Optimization, you can either:
 - [Visit WPOven's website](https://www.wpoven.com/plugins/wpoven-image-optimization) to learn more about the plugin.
 
 Upload the Plugin:
