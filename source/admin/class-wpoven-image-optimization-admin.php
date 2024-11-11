@@ -43,6 +43,8 @@ class Wpoven_Image_Optimization_Admin
 	 */
 	private $version;
 	private $_wpoven_smtp_suresend;
+	private $wp_filesystem;
+
 
 	/**
 	 * Initialize the class and set its properties.
@@ -53,7 +55,7 @@ class Wpoven_Image_Optimization_Admin
 	 */
 	public function __construct($plugin_name, $version)
 	{
-
+		global $wp_filesystem;
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
@@ -63,6 +65,12 @@ class Wpoven_Image_Optimization_Admin
 			require_once plugin_dir_path(dirname(__FILE__)) . 'includes/libraries/redux-framework/redux-core/framework.php';
 		}
 
+		if (! function_exists('WP_Filesystem')) {
+			require_once(ABSPATH . 'wp-admin/includes/file.php');
+			WP_Filesystem();
+		}
+
+		$this->wp_filesystem = $wp_filesystem;
 
 		$this->actions();
 	}
@@ -664,8 +672,9 @@ class Wpoven_Image_Optimization_Admin
 					// Create the target directory in wpoven_optimized_images folder
 					$targetDir = $upload_dir['basedir'] . "/wpoven_optimized_images/{$year}/{$month}";
 
-					if (!is_dir($targetDir)) {
-						mkdir($targetDir, 0777, true); // Create the directory recursively if it doesn't exist
+					// Check if the directory exists, and create it if not
+					if (!$this->wp_filesystem->is_dir($targetDir)) {
+						$$this->wp_filesystem->mkdir($targetDir, FS_CHMOD_DIR); // Create the directory recursively if it doesn't exist
 					}
 
 					// Set the target file path
@@ -690,7 +699,7 @@ class Wpoven_Image_Optimization_Admin
 					}
 
 					// Move the uploaded file to the target directory
-					if (move_uploaded_file($_FILES['image_' . $fileCounter]['tmp_name'], $target_file)) {
+					if (wp_handle_upload($_FILES['image_' . $fileCounter]['tmp_name'], $target_file)) {
 						$return_array['co'][] = $_POST;
 						$return_array['success_msg'] = __('Uploaded successfully', 'WPOven image optimization');
 					} else {
@@ -798,8 +807,8 @@ class Wpoven_Image_Optimization_Admin
 			WHERE pm.meta_key = %s
 			AND pm.meta_value = %s
 			AND p.post_type = 'attachment'
-			AND p.post_mime_type LIKE 'image%%'
-		", $meta_key, '1'));
+			AND p.post_mime_type LIKE %s
+		", $meta_key, '1', 'image%'));
 
 		// Query for non-optimized attachments (meta_value = 0)
 		$not_optimized = $wpdb->get_var($wpdb->prepare("
@@ -809,17 +818,18 @@ class Wpoven_Image_Optimization_Admin
 			WHERE pm.meta_key = %s
 			AND pm.meta_value = %s
 			AND p.post_type = 'attachment'
-			AND p.post_mime_type LIKE 'image%%'
-		", $meta_key, '0'));
+			AND p.post_mime_type LIKE %s
+		", $meta_key, '0', 'image%'));
 
+		// Query for attachments without the specified meta key
 		$other_values = $wpdb->get_var($wpdb->prepare("
 			SELECT COUNT(*)
 			FROM $wpdb->posts p
 			LEFT JOIN $wpdb->postmeta pm ON p.ID = pm.post_id AND pm.meta_key = %s
 			WHERE pm.post_id IS NULL
 			AND p.post_type = 'attachment'
-			AND p.post_mime_type LIKE 'image%%'
-		", $meta_key));
+			AND p.post_mime_type LIKE %s
+		", $meta_key, 'image%'));
 
 		// Query to get the serialized size data for optimized images
 		$sizes = $wpdb->get_results($wpdb->prepare("

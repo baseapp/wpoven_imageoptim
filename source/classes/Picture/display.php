@@ -297,7 +297,7 @@ class Display
         ];
 
         // Parse the URL to get the path
-        $url_path = parse_url($src['src'], PHP_URL_PATH);
+        $url_path = wp_parse_url($src['src'], PHP_URL_PATH);
         // Extract the path info (directory and filename) from the URL
         $path_info = pathinfo($url_path);
         $base_filename = basename($src['src']); // Example: Screenshot-from-2024-08-09-11-54-24-1024x606.png

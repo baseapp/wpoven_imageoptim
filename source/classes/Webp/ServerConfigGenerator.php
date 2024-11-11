@@ -13,13 +13,23 @@ class ServerConfigGenerator
     private $extensions;
     private $configFileName;
     private $rewriteRules;
+    private $wp_filesystem;
 
     public function __construct()
     {
+        global $wp_filesystem;
         // Initialize necessary properties
         $this->home_url = home_url('/');
         $this->home_root = wp_parse_url($this->home_url, PHP_URL_PATH);
         $this->extensions = 'jpg|jpeg|png|gif'; // Adjust extensions as needed
+
+        if (! function_exists('WP_Filesystem')) {
+			require_once(ABSPATH . 'wp-admin/includes/file.php');
+			WP_Filesystem();
+		}
+
+		$this->wp_filesystem = $wp_filesystem;
+
     }
 
     /**
@@ -79,15 +89,15 @@ class ServerConfigGenerator
         $dir = $path['basedir'] . '/conf';
 
         // Create the directory if it doesn't exist
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true); // Create the directory recursively
+        if (!$this->wp_filesystem->is_dir($dir)) {
+            $this->wp_filesystem->mkdir($dir, FS_CHMOD_DIR); // Create the directory recursively with proper permissions
         }
 
         // Define the path to the configuration file
         $configFilePath = $dir . '/' . $this->configFileName;
 
         // Write the rules to the configuration file
-        file_put_contents($configFilePath, $this->rewriteRules);
+        $this->wp_filesystem->put_contents($configFilePath, $this->rewriteRules);
 
         // Optionally, echo a message to confirm the config file was written
         // echo "Server configuration has been written to " . $configFilePath;
