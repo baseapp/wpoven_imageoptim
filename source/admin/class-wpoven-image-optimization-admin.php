@@ -42,7 +42,7 @@ class Wpoven_Image_Optimization_Admin
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
-	private $_wpoven_smtp_suresend;
+	private $_wpoven_image_optimization;
 	private $wp_filesystem;
 
 
@@ -1167,7 +1167,7 @@ class Wpoven_Image_Optimization_Admin
 	 */
 	public function admin_main(Wpoven_Image_Optimization $wpoven_image_optimization)
 	{
-		$this->wpoven_image_optimization = $wpoven_image_optimization;
+		$this->_wpoven_image_optimization = $wpoven_image_optimization;
 		add_action('admin_menu', array($this, 'wpoven_image_optimization_menu'));
 		$this->setup_gui();
 	}
