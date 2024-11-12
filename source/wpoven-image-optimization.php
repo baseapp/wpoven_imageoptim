@@ -55,7 +55,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/libraries/plugin-update-check
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $myUpdateChecker = PucFactory::buildUpdateChecker(
-	'https://github.com/baseapp/wpoven_imageoptim.git',
+	'https://github.com/baseapp/wpoven_imageoptim/',
 	__FILE__,
 	'wpoven-image-optimization'
 );
