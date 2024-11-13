@@ -24,6 +24,11 @@ Re-optimization: Re-optimize images that have already been optimized once.
 
 Pie chart: Visualize your image optimization progress with an intuitive pie chart.
 
+== Screenshots ==
+
+1. ![Image Optimization](https://raw.githubusercontent.com/baseapp/wpoven_imageoptim/main/assets/screenshots/wpoven-image-optimization.png)
+2. ![Bulk Optimization](https://raw.githubusercontent.com/baseapp/wpoven_imageoptim/main/assets/screenshots/bulk-optimization.png)
+
 == Installation ==
 
 Download the Plugin:
@@ -80,11 +85,6 @@ No, the plugin automatically optimizes new uploads. For existing images, you can
 = Will optimizing images improve my SEO ranking? =
 
 Yes, Google favors faster-loading pages. By reducing image load times, your SEO ranking can improve due to better page performance and user experience.
-
-== Screenshots ==
-
-1. ![Image Optimization](https://github.com/baseapp/wpoven_imageoptim/blob/main/assets/screenshots/wpoven-image-optimization.png)
-2. ![Bulk Optimization](https://github.com/baseapp/wpoven_imageoptim/blob/main/assets/screenshots/bulk-optimization.png)
 
 == Changelog ==
 
